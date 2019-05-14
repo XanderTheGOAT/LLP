@@ -2,8 +2,8 @@ class Computer {
   String name;
   List<String> connectedDevices;
   String userName;
-
-  Computer(this.name, this.connectedDevices, this.userName);
+  Computer() : this.init("", [], "");
+  Computer.init(this.name, this.connectedDevices, this.userName);
   Computer.fromJSON(Map<String, dynamic> json)
       : name = json["name"],
         userName = json["userName"],

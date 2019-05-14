@@ -4,7 +4,8 @@ class User {
   String userName;
   String password;
   List<Profile> profiles;
-  User(this.userName, this.password, this.profiles);
+  User() : this.init("", "", []);
+  User.init(this.userName, this.password, this.profiles);
   User.fromJSON(Map<String, dynamic> json)
       : userName = json["userName"],
         password = json["password"] {

@@ -21,18 +21,16 @@ class MainPage extends StatelessWidget {
             'Light Link',
             style: TextStyle(
               fontSize: 22,
-              fontFamily: 'serif',
-              color: Colors.amber,
+              fontFamily: 'sans-serif',
+              color: Colors.white,
             ),
           ),
         ),
       ),
-      body: Flex(
-        direction: Axis.vertical,
-        mainAxisSize: MainAxisSize.max,
+      body: ListView(
         children: profiles
             .map((c) => Padding(
-                  padding: EdgeInsets.all(12),
+                  padding: EdgeInsets.only(top: 9),
                   child: ProfileComponent(c),
                 ))
             .toList(),

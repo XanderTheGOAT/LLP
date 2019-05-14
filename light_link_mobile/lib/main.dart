@@ -20,9 +20,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Light Link',
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+        primarySwatch: Colors.blueGrey,
       ),
-      home: MainPage(service.getProfilesForUser(username)),
+      home: MainPage(
+        service.getProfilesForUser(username),
+      ),
     );
   }
 }
