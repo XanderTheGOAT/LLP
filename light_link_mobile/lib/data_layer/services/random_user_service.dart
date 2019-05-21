@@ -8,6 +8,7 @@ class RandomUserService extends UserService {
   Map<String, User> cache;
   List<String> profileNames;
   Random rnJesus;
+  User currentlyLoggedIn;
 
   RandomUserService() {
     rnJesus = Random();
@@ -77,6 +78,12 @@ class RandomUserService extends UserService {
     if (!cache.containsKey(username)) {
       cache[username] = new User.init(username, "", []);
     }
-    return cache[username];
+    currentlyLoggedIn = cache[username];
+    return currentlyLoggedIn;
+  }
+
+  @override
+  void removeProfileFromUser(String name) {
+    currentlyLoggedIn.profiles.removeWhere((p) => p.name == name);
   }
 }

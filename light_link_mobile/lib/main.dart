@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
       ),
       home: MainPage(
         service.getProfilesForUser(username),
+        service,
       ),
     );
   }

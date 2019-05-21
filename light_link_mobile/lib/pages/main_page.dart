@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:light_link_mobile/components/profile_component.dart';
 import 'package:light_link_mobile/data_layer/models/profile.dart';
+import 'package:light_link_mobile/data_layer/services/user_service.dart';
 
 class MainPage extends StatelessWidget {
   final List<Profile> profiles;
-  MainPage(this.profiles);
+  final UserService service;
+  MainPage(this.profiles, this.service);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
