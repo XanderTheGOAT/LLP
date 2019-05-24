@@ -12,7 +12,10 @@ class Profile {
       {'name': name, 'configurations': configurations};
 
   Color getColor() {
-    return createColorMap(configurations.values.first);
+    if (configurations.values.length > 0)
+      return createColorMap(configurations.values.first);
+    else
+      return Colors.black;
   }
 
   Color createColorMap(String first) {

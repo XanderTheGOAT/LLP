@@ -36,17 +36,13 @@ class RandomUserService extends UserService {
 
   factory RandomUserService.withSeededCache() {
     var service = RandomUserService();
-    service.cache["gxldcptrick"] = User.init("gxldcptrick", "", []);
-    service.cache["alexthegoat"] = User.init("alexthegoat", "", []);
+    service.getUserById("gxldcptrick");
+    service.getUserById("alexTheGoat");
     return service;
   }
 
   @override
   Iterable<Profile> getProfilesForUser(String username) {
-    if (cache[username].profiles.isEmpty) {
-      cache[username].profiles =
-          createProfiles().where((p) => p.name.length > 30).take(1000).toList();
-    }
     return cache[username].profiles;
   }
 
@@ -76,14 +72,20 @@ class RandomUserService extends UserService {
   @override
   User getUserById(String username) {
     if (!cache.containsKey(username)) {
-      cache[username] = new User.init(username, "", []);
+      cache[username] =
+          new User.init(username, "", createProfiles().take(10).toList());
     }
     currentlyLoggedIn = cache[username];
     return currentlyLoggedIn;
   }
 
   @override
-  void removeProfileFromUser(String name) {
-    currentlyLoggedIn.profiles.removeWhere((p) => p.name == name);
+  void removeProfileFromUser(String username, String profilename) {
+    getUserById(username).profiles.removeWhere((p) => p.name == profilename);
+  }
+
+  @override
+  void addProfileToUser(String username, Profile profile) {
+    getUserById(username).profiles.add(profile);
   }
 }

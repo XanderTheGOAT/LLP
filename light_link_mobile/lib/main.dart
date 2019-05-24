@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:light_link_mobile/components/AddProfileComponent.dart';
 import 'package:light_link_mobile/data_layer/services/random_user_service.dart';
 import './pages/main_page.dart';
 import 'data_layer/services/user_service.dart';
 
 void main() {
+  var service = RandomUserService.withSeededCache();
+  var user = "gxldcptrick";
+  service.getUserById(user);
   runApp(MyApp(
-    RandomUserService.withSeededCache(),
-    "gxldcptrick",
+    service,
+    user,
   ));
 }
 
@@ -23,9 +27,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blueGrey,
       ),
       home: MainPage(
-        service.getProfilesForUser(username),
+        username,
         service,
       ),
+      routes: {
+        "addProfile": (context) =>
+            AddProfileComponent(this.service, this.username),
+      },
     );
   }
 }

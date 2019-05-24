@@ -1,13 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:light_link_mobile/components/AddProfileComponent.dart';
+import 'package:light_link_mobile/components/custome_button_component.dart';
 import 'package:light_link_mobile/components/profile_component.dart';
 import 'package:light_link_mobile/data_layer/models/profile.dart';
 import 'package:light_link_mobile/data_layer/services/user_service.dart';
 
-class MainPage extends StatelessWidget {
-  final List<Profile> profiles;
+class MainPage extends StatefulWidget {
+  final String loggedIn;
   final UserService service;
-  MainPage(this.profiles, this.service);
+  MainPage(this.loggedIn, this.service);
+
+  @override
+  State<StatefulWidget> createState() {
+    return MainPageState(this.loggedIn, this.service);
+  }
+}
+
+class MainPageState extends State<MainPage> {
+  final String loggedIn;
+  List<Profile> profiles;
+  UserService service;
+  MainPageState(this.loggedIn, this.service) {
+    this.profiles = this.service.getProfilesForUser(loggedIn);
+  }
+
+  void onAddProfilePressed() {
+    //Do Nothing for now.
+    debugPrint("Add Profile Pressed");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,13 +52,38 @@ class MainPage extends StatelessWidget {
         ),
       ),
       body: ListView(
-        children: profiles
-            .map((c) => Padding(
-                  padding: EdgeInsets.only(top: 9),
-                  child: ProfileComponent(c),
-                ))
-            .toList(),
+        children: [
+          ...this
+              .profiles
+              .map((c) => Padding(
+                    padding: EdgeInsets.only(top: 9),
+                    child: ProfileComponent(
+                      c,
+                      this,
+                    ),
+                  ))
+              .toList(),
+          new Padding(
+              padding: EdgeInsets.only(
+                top: 9,
+                left: 15,
+                right: 15,
+                bottom: 9,
+              ),
+              child: CustomButton(
+                "Add Profile",
+                onPressed: () => Navigator.pushNamed(context, "addProfile"),
+                width: 50,
+                height: 100,
+                fontSize: 22,
+              ))
+        ],
       ),
     );
+  }
+
+  void removeProfile(Profile c) {
+    this.service.removeProfileFromUser(loggedIn, c.name);
+    this.setState(() => profiles = service.getProfilesForUser(loggedIn));
   }
 }

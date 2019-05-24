@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:light_link_mobile/data_layer/models/profile.dart';
+import 'package:light_link_mobile/pages/main_page.dart';
 
 import 'custome_button_component.dart';
 
 class ProfileComponent extends StatelessWidget {
   final Profile profile;
-  const ProfileComponent(this.profile);
+  final MainPageState parent;
 
-  void doNothing() {}
+  const ProfileComponent(this.profile, this.parent);
+
+  void doNothing() {
+    debugPrint("Doing nothing...");
+  }
+
+  void onRemoveClick() {
+    this.parent.removeProfile(this.profile);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +26,10 @@ class ProfileComponent extends StatelessWidget {
       decoration: BoxDecoration(color: profile.getColor()),
       child: Column(
         children: <Widget>[
+          CustomButton(
+            "Delete",
+            onPressed: onRemoveClick,
+          ),
           Padding(
             padding: EdgeInsets.only(top: 20, left: 20, right: 20),
             child: Text(
