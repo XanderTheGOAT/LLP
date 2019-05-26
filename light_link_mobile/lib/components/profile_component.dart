@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:light_link_mobile/data_layer/models/profile.dart';
 import 'package:light_link_mobile/pages/main_page.dart';
 
-import 'custome_button_component.dart';
+import 'custom_button_component.dart';
 
 class ProfileComponent extends StatelessWidget {
   final Profile profile;
