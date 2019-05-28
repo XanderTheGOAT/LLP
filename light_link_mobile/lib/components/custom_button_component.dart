@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
-  @required
   final VoidCallback onPressed;
   final double height;
   final double width;

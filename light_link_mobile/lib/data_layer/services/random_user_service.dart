@@ -88,4 +88,11 @@ class RandomUserService extends UserService {
   void addProfileToUser(String username, Profile profile) {
     getUserById(username).profiles.add(profile);
   }
+
+  @override
+  void updateProfileForUser(String uname, String ogName, Profile profile) {
+    var user = getUserById(uname).profiles;
+    user.removeWhere((p) => p.name == ogName);
+    user.add(profile);
+  }
 }

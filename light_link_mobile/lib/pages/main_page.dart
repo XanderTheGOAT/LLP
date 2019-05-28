@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:light_link_mobile/components/AddProfileComponent.dart';
-import 'package:light_link_mobile/components/custome_button_component.dart';
+import 'package:light_link_mobile/components/custom_button_component.dart';
 import 'package:light_link_mobile/components/profile_component.dart';
 import 'package:light_link_mobile/data_layer/models/profile.dart';
 import 'package:light_link_mobile/data_layer/services/user_service.dart';
@@ -60,6 +59,7 @@ class MainPageState extends State<MainPage> {
                     child: ProfileComponent(
                       c,
                       this,
+                      c.name,
                     ),
                   ))
               .toList(),
@@ -85,5 +85,9 @@ class MainPageState extends State<MainPage> {
   void removeProfile(Profile c) {
     this.service.removeProfileFromUser(loggedIn, c.name);
     this.setState(() => profiles = service.getProfilesForUser(loggedIn));
+  }
+
+  updateProfile(String uname, Profile profile, String ogName) {
+    this.service.updateProfileForUser(uname, ogName, profile);
   }
 }

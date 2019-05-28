@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:light_link_mobile/data_layer/services/random_user_service.dart';
-import 'package:light_link_mobile/pages/create_profile_page.dart';
+import 'package:light_link_mobile/pages/profile_editing_page.dart';
 import './pages/main_page.dart';
 import 'data_layer/services/user_service.dart';
 
@@ -31,8 +31,11 @@ class MyApp extends StatelessWidget {
         service,
       ),
       routes: {
-        "addProfile": (context) =>
-            CreateProfilePage(this.service, this.username),
+        "addProfile": (context) => ProfileEditingPage(
+              this.username,
+              (username, profile) =>
+                  this.service.addProfileToUser(username, profile),
+            )
       },
     );
   }
