@@ -6,6 +6,6 @@ abstract class UserService {
   Iterable<Profile> getProfilesForUser(String username);
   void removeProfileFromUser(String username, String profilename);
   void addProfileToUser(String username, Profile profile);
-
+  Profile getActiveProfile(String username);
   void updateProfileForUser(String uname, String ogName, Profile profile);
 }

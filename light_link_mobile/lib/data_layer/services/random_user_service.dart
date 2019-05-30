@@ -95,4 +95,10 @@ class RandomUserService extends UserService {
     user.removeWhere((p) => p.name == ogName);
     user.add(profile);
   }
+
+  @override
+  Profile getActiveProfile(String username) {
+    var user = getUserById(username);
+    return user.profiles.singleWhere((s) => s.isActive) ?? user.profiles.first;
+  }
 }
