@@ -27,13 +27,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blueGrey,
       ),
       home: MainPage(
-        username,
         service,
+        username,
       ),
       routes: {
         "addProfile": (context) => ProfileEditingPage(
-              this.username,
-              (username, profile) =>
+              (oldname, profile) =>
                   this.service.addProfileToUser(username, profile),
             )
       },

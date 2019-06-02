@@ -7,14 +7,13 @@ import 'package:light_link_mobile/data_layer/models/profile.dart';
 import 'color_editing_page.dart';
 
 class ProfileEditingPage extends StatefulWidget {
-  final String username;
   final Function(String, Profile) callback;
   final Profile profile;
-  ProfileEditingPage(this.username, this.callback, [this.profile]);
+  String oldName;
+  ProfileEditingPage(this.callback, [this.profile]);
   @override
   State<StatefulWidget> createState() {
     return ProfileEditingPageState(
-      this.username,
       this.callback,
       this.profile,
     );
@@ -22,13 +21,14 @@ class ProfileEditingPage extends StatefulWidget {
 }
 
 class ProfileEditingPageState extends State<ProfileEditingPage> {
-  final String username;
   Profile profile;
   TextEditingController _controller;
   final Function(String, Profile) callback;
-  ProfileEditingPageState(this.username, this.callback, [this.profile]) {
+  String oldName;
+  ProfileEditingPageState(this.callback, [this.profile]) {
     profile = profile == null ? Profile() : Profile.copy(profile);
     _controller = TextEditingController(text: profile.name);
+    oldName = profile.name;
   }
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,7 @@ class ProfileEditingPageState extends State<ProfileEditingPage> {
                 child: CustomButton(
                   "Finish",
                   onPressed: () {
-                    callback(this.username, this.profile);
+                    callback(this.oldName, this.profile);
                     Navigator.pop(context);
                   },
                 ),
@@ -83,7 +83,11 @@ class ProfileEditingPageState extends State<ProfileEditingPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (ctx) => ColorEditingPage(profile, k)),
+                        builder: (ctx) => ColorEditingPage(
+                              profile,
+                              k,
+                              this.profile.configurations[k],
+                            )),
                   );
                 },
                 child: ColorComponent(

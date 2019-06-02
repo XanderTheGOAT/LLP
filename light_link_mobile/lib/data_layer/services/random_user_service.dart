@@ -64,6 +64,7 @@ class RandomUserService extends UserService {
         {
           "keyboard": color,
         },
+        false,
       );
       yield profile;
     }
@@ -74,6 +75,7 @@ class RandomUserService extends UserService {
     if (!cache.containsKey(username)) {
       cache[username] =
           new User.init(username, "", createProfiles().take(10).toList());
+      cache[username].profiles[0].isActive = true;
     }
     currentlyLoggedIn = cache[username];
     return currentlyLoggedIn;
@@ -99,6 +101,17 @@ class RandomUserService extends UserService {
   @override
   Profile getActiveProfile(String username) {
     var user = getUserById(username);
-    return user.profiles.singleWhere((s) => s.isActive) ?? user.profiles.first;
+    if (user.profiles.any((c) => c.isActive))
+      return user.profiles.firstWhere((c) => c.isActive);
+    else
+      return user.profiles.first;
+  }
+
+  @override
+  void updateActiveProfile(String username, Profile profile) {
+    var user = getUserById(username);
+    user.profiles.forEach((c) => c.isActive = false);
+    profile.isActive = true;
+    updateProfileForUser(username, profile.name, profile);
   }
 }

@@ -8,4 +8,5 @@ abstract class UserService {
   void addProfileToUser(String username, Profile profile);
   Profile getActiveProfile(String username);
   void updateProfileForUser(String uname, String ogName, Profile profile);
+  void updateActiveProfile(String username, Profile profile);
 }

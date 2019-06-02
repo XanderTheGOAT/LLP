@@ -6,13 +6,14 @@ class Profile {
   Map<String, dynamic> configurations;
 /////////////////////////////////////////////////////////////////////////////////////////
 
-  Profile() : this.init("", new Map());
-  Profile.init(this.name, this.configurations) {
+  Profile() : this.init("", new Map(), false);
+  Profile.init(this.name, this.configurations, this.isActive) {
     if (!this.configurations.containsKey("keyboard")) {
       configurations["keyboard"] = Colors.black.value.toRadixString(16);
     }
   }
-  Profile.copy(Profile copy) : this.init(copy.name, copy.configurations);
+  Profile.copy(Profile copy)
+      : this.init(copy.name, copy.configurations, copy.isActive);
 
   Profile.fromJSON(Map<String, dynamic> json)
       : name = json["name"] as String,

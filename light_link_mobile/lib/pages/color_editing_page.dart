@@ -7,7 +7,12 @@ import 'package:light_link_mobile/data_layer/models/profile.dart';
 class ColorEditingPage extends StatelessWidget {
   final Profile profile;
   final String config;
-  ColorEditingPage(this.profile, this.config);
+  final String color;
+  ColorEditingPage(
+    this.profile,
+    this.config,
+    this.color,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -16,16 +21,23 @@ class ColorEditingPage extends StatelessWidget {
         title: Text(this.config),
       ),
       body: ListView(children: [
-        ColorPicker(
-          onChanged: (c) =>
-              this.profile.configurations[config] = c.value.toRadixString(16),
+        Padding(
+          padding: EdgeInsets.all(20),
+          child: ColorPicker(
+            color: this.profile.createColorMap(this.color),
+            onChanged: (c) =>
+                this.profile.configurations[config] = c.value.toRadixString(16),
+          ),
         ),
-        CustomButton(
-          "Save",
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        )
+        Padding(
+          padding: EdgeInsets.all(20),
+          child: CustomButton(
+            "Save",
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
       ]),
     );
   }

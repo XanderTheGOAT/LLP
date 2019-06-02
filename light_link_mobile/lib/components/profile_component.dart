@@ -1,33 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:light_link_mobile/data_layer/models/profile.dart';
-import 'package:light_link_mobile/pages/main_page.dart';
 import 'package:light_link_mobile/pages/profile_editing_page.dart';
 import 'package:light_link_mobile/pages/view_profile_page.dart';
 
-import 'custom_button_component.dart';
-
 class ProfileComponent extends StatelessWidget {
   final Profile profile;
-  final MainPageState parent;
-  final String ogName;
+  final Function(Profile) onDelete;
+  final Function(String, Profile) onProfileChanged;
+  final Function(Profile) setActive;
+  String ogName;
 
-  const ProfileComponent(this.profile, this.parent, this.ogName);
+  ProfileComponent(this.profile,
+      [this.onDelete, this.onProfileChanged, this.setActive]) {
+    this.ogName = this.profile.name;
+  }
 
   void onRemoveClick() {
-    this.parent.removeProfile(this.profile);
+    this.onDelete(this.profile);
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 15, right: 15),
+      margin: EdgeInsets.only(left: 9, right: 9),
       decoration: BoxDecoration(color: profile.getColor()),
       child: Column(
         children: <Widget>[
-          CustomButton(
-            "Delete",
-            onPressed: onRemoveClick,
+          ButtonBar(
+            mainAxisSize: MainAxisSize.min,
+            alignment: MainAxisAlignment.center,
+            children: <Widget>[
+              IconButton(
+                icon: Icon(
+                  Icons.star,
+                  color: colorIsDark() ? Colors.white : Colors.black,
+                ),
+                onPressed: () => this.setActive(profile),
+              ),
+              IconButton(
+                tooltip: "Delete the profile",
+                icon: Icon(
+                  Icons.delete_forever,
+                  color: colorIsDark() ? Colors.white : Colors.black,
+                ),
+                onPressed: onRemoveClick,
+              ),
+            ],
           ),
           Padding(
             padding: EdgeInsets.only(top: 20, left: 20, right: 20),
@@ -41,8 +60,16 @@ class ProfileComponent extends StatelessWidget {
           ),
           ButtonBar(
             children: <Widget>[
-              CustomButton(
-                "View",
+              RaisedButton.icon(
+                icon: Icon(
+                  Icons.remove_red_eye,
+                  color: Colors.white,
+                ),
+                label: Text("View",
+                    style: TextStyle(
+                      color: Colors.white,
+                    )),
+                color: Colors.blueGrey,
                 onPressed: () {
                   Navigator.push(
                       context,
@@ -50,15 +77,23 @@ class ProfileComponent extends StatelessWidget {
                           builder: (ctx) => ViewProfilePage(this.profile)));
                 },
               ),
-              CustomButton(
-                "Edit",
+              RaisedButton.icon(
+                icon: Icon(
+                  Icons.mode_edit,
+                  color: Colors.white,
+                ),
+                label: Text(
+                  "Edit",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                color: Colors.blueGrey,
                 onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (ctx) => ProfileEditingPage(
-                              this.parent.loggedIn,
-                              (username, profile) => this.parent.updateProfile(
-                                  username, profile, this.ogName),
+                              onProfileChanged,
                               this.profile,
                             ),
                       ),
