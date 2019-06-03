@@ -73,75 +73,82 @@ class RandomUserService extends UserService {
     }
   }
 
-  // @override
-  // User getUserById(String username) {
-  //   if (!cache.containsKey(username)) {
-  //     cache[username] =
-  //         new User.init(username, "", createProfiles().take(10).toList());
-  //     cache[username].profiles[0].isActive = true;
-  //   }
-  //   currentlyLoggedIn = cache[username];
-  //   return currentlyLoggedIn;
-  // }
-
-  // @override
-  // void removeProfileFromUser(String username, String profilename) {
-  //   getUserById(username).profiles.removeWhere((p) => p.name == profilename);
-  // }
-
-  // @override
-  // void addProfileToUser(String username, Profile profile) {
-  //   getUserById(username).profiles.add(profile);
-  // }
-
-  // @override
-  // void updateProfileForUser(String uname, String ogName, Profile profile) {
-  //   var user = getUserById(uname).profiles;
-  //   user.removeWhere((p) => p.name == ogName);
-  //   user.add(profile);
-  // }
-
-  // @override
-  // Profile getActiveProfile(String username) {
-  //   var user = getUserById(username);
-  //   if (user.profiles.any((c) => c.isActive))
-  //     return user.profiles.firstWhere((c) => c.isActive);
-  //   else
-  //     return user.profiles.first;
-  // }
-
-  // @override
-  // void updateActiveProfile(String username, Profile profile) {
-  //   var user = getUserById(username);
-  //   user.profiles.forEach((c) => c.isActive = false);
-  //   profile.isActive = true;
-  //   updateProfileForUser(username, profile.name, profile);
-  // }
-
-  // @override
-  // void updateProfileConfigsWithComputer(String username) {
-  //   var setOfDevices = Set<String>();
-  //   puters.forEach((c) => c.connectedDevices.forEach(setOfDevices.add));
-  //   Profile.currentConfigs = setOfDevices;
-  //   this.cache[username].profiles.forEach((p) {
-  //     p.applyLatestConfigs();
-  //     reRollColors(p);
-  //   });
-  // }
-
-  // @override
-  // void linkComputerToUser(String username, String computerName) {
-  //   puters
-  //       .where((c) => c.name == computerName)
-  //       .forEach((c) => c.userName = username);
-  // }
-
-  // @override
-  // Iterable<Profile> getProfilesForUser(String username) {
-  //   return cache[username].profiles;
-  // }
-
   void reRollColors(Profile p) {
     p.configurations.keys.forEach((k) => p.configurations[k] = generateColor());
+  }
+
+  @override
+  Future<void> addProfileToUser(String username, Profile profile) {
+    return Future(() {
+      cache[username].profiles.add(profile);
+    });
+  }
+
+  @override
+  Future<Profile> getActiveProfile(String username) {
+    return Future(() => cache[username].profiles.firstWhere((p) => p.isActive));
+  }
+
+  @override
+  Future<Iterable<Profile>> getProfilesForUser(String username) {
+    return Future(() => cache[username].profiles);
+  }
+
+  @override
+  Future<User> getUserById(String username) {
+    return Future(() {
+      if (!cache.containsKey(username)) {
+        var profiles = this.createProfiles().take(10).toList();
+        profiles.first.isActive = true;
+        cache[username] = User.init(username, "password", profiles);
+      }
+
+      return cache[username];
+    });
+  }
+
+  @override
+  Future<void> linkComputerToUser(String username, String computerName) {
+    return Future(() => this
+        .puters
+        .where((c) => c.name == computerName)
+        .forEach((c) => c.userName = username));
+  }
+
+  @override
+  Future<void> removeProfileFromUser(String username, String profilename) {
+    return Future(() => this
+        .cache[username]
+        .profiles
+        .removeWhere((p) => p.name == profilename));
+  }
+
+  @override
+  Future<void> updateActiveProfile(String username, Profile profile) {
+    return Future(() {
+      cache[username].profiles.forEach((p) => p.isActive = false);
+      cache[username].profiles.firstWhere((p) => p == profile).isActive = true;
+    });
+  }
+
+  @override
+  Future<void> updateProfileConfigsWithComputer(String username) {
+    return Future(() {
+      var props = Set<String>();
+      puters
+          .where((c) => c.userName == username)
+          .forEach((c) => c.connectedDevices.forEach(props.add));
+      Profile.currentConfigs = props;
+      cache[username].profiles.forEach((p) {
+        p.applyLatestConfigs();
+        reRollColors(p);
+      });
+    });
+  }
+
+  @override
+  Future<void> updateProfileForUser(
+      String uname, String ogName, Profile profile) {
+    return Future(() {});
   }
 }

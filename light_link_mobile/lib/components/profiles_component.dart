@@ -209,7 +209,7 @@ class ProfilesState extends State<ProfilesComponent> {
     setState(() {
       _profiles.add(_activeProfile);
       _activeProfile = profileData;
-      _profiles = _profiles.where((p) => p != profileData);
+      _profiles = _profiles.where((p) => p != profileData).toList();
     });
 
     this._service.updateActiveProfile(_username, profileData).then((c) {
