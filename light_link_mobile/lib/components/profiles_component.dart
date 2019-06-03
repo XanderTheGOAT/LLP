@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:light_link_mobile/data_layer/models/profile.dart';
@@ -27,6 +24,9 @@ class ProfilesState extends State<ProfilesComponent> {
   String _username;
   ProfilesState(this._service, this._username) {
     _fetchProfiles();
+    _profiles = [];
+    _activeProfile = Profile.init(
+        "Loading...", Map<String, dynamic>(), true, DateTime.now());
   }
 
   @override
