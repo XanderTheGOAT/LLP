@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:light_link_mobile/data_layer/models/profile.dart';
@@ -42,9 +44,7 @@ class ProfilesState extends State<ProfilesComponent> {
   }
 
   _updateState() {
-    this.setState(() {
-      _fetchProfiles();
-    });
+    _fetchProfiles();
   }
 
   _createDismissibleBackground() {
@@ -119,7 +119,6 @@ class ProfilesState extends State<ProfilesComponent> {
   }
 
   _createSelectedDisplay() {
-    var activeProfile = _service.getActiveProfile(this._username);
     return Padding(
       padding: EdgeInsets.only(
         top: 9,
@@ -128,7 +127,7 @@ class ProfilesState extends State<ProfilesComponent> {
       ),
       child: SelectedProfileComponent(
         this._username,
-        activeProfile,
+        this._activeProfile,
         this._service,
       ),
     );
@@ -138,26 +137,30 @@ class ProfilesState extends State<ProfilesComponent> {
     return ProfileComponent(
       profileData,
       (p) {
-        _service.removeProfileFromUser(
-          this._username,
-          p.name,
-        );
-        this._updateState();
+        setState(() => _profiles.remove(p));
+        _service
+            .removeProfileFromUser(
+              this._username,
+              p.name,
+            )
+            .then((c) => this._updateState());
       },
       (oldName, p) {
-        _service.updateProfileForUser(
-          this._username,
-          oldName,
-          p,
-        );
-        this._updateState();
+        _service
+            .updateProfileForUser(
+              this._username,
+              oldName,
+              p,
+            )
+            .then((c) => this._updateState());
       },
       (p) {
-        _service.updateActiveProfile(
-          this._username,
-          p,
-        );
-        this._updateState();
+        _service
+            .updateActiveProfile(
+              this._username,
+              p,
+            )
+            .then((c) => this._updateState());
       },
     );
   }
@@ -173,22 +176,28 @@ class ProfilesState extends State<ProfilesComponent> {
   }
 
   void _removeProfile(Profile profileData, BuildContext context) {
-    this._service.removeProfileFromUser(
+    this
+        ._service
+        .removeProfileFromUser(
           this._username,
           profileData.name,
-        );
-    _updateState();
+        )
+        .then((c) => _updateState());
     Scaffold.of(context).showSnackBar(
       SnackBar(
         content: Text("Profile Deleted!!"),
         action: SnackBarAction(
           label: "Undo",
           onPressed: () {
-            this._service.addProfileToUser(
+            this
+                ._service
+                .addProfileToUser(
                   this._username,
                   profileData,
-                );
-            _updateState();
+                )
+                .then((c) {
+              _updateState();
+            });
           },
         ),
       ),
@@ -196,15 +205,16 @@ class ProfilesState extends State<ProfilesComponent> {
   }
 
   void _activateProfile(Profile profileData) {
-    this._service.updateActiveProfile(_username, profileData);
-    _updateState();
+    this._service.updateActiveProfile(_username, profileData).then((c) {
+      _updateState();
+    });
   }
 
   void _fetchProfiles() {
-    _activeProfile = _service.getActiveProfile(_username);
-    _profiles = _service
-        .getProfilesForUser(_username)
-        .where((p) => p != _activeProfile)
-        .toList();
+    _service.getProfilesForUser(_username).then((c) => this.setState(() {
+          _profiles = c.toList();
+          _activeProfile = _profiles.firstWhere((p) => p.isActive);
+          _profiles.sort((p1, p2) => p1.created.compareTo(p2.created));
+        }));
   }
 }
