@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:light_link_mobile/data_layer/models/computer.dart';
 import 'package:light_link_mobile/data_layer/models/profile.dart';
 import 'package:light_link_mobile/data_layer/models/user.dart';
 import 'package:light_link_mobile/data_layer/services/user_service.dart';
@@ -7,6 +8,7 @@ import 'package:light_link_mobile/data_layer/services/user_service.dart';
 class RandomUserService extends UserService {
   Map<String, User> cache;
   List<String> profileNames;
+  List<Computer> puters;
   Random rnJesus;
   User currentlyLoggedIn;
 
@@ -31,6 +33,9 @@ class RandomUserService extends UserService {
       "Foil this out mane",
       "Frijoles",
       "This is a really really really long thing in order to make this thing cool looking."
+    ];
+    puters = [
+      Computer.init("Mc Bitchin", ["keyboard", "mouse", "mousepad"], null)
     ];
   }
 
@@ -118,5 +123,20 @@ class RandomUserService extends UserService {
     user.profiles.forEach((c) => c.isActive = false);
     profile.isActive = true;
     updateProfileForUser(username, profile.name, profile);
+  }
+
+  @override
+  void updateProfileConfigsWithComputer(String username) {
+    var setOfDevices = Set<String>();
+    puters.forEach((c) => c.connectedDevices.forEach(setOfDevices.add));
+    Profile.currentConfigs = setOfDevices;
+    this.cache[username].profiles.forEach((p) => p.applyLatestConfigs());
+  }
+
+  @override
+  void linkComputerToUser(String username, String computerName) {
+    puters
+        .where((c) => c.name == computerName)
+        .forEach((c) => c.userName = username);
   }
 }

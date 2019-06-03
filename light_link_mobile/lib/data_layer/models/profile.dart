@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
 
 class Profile {
+  static Set<String> _currentConfigs = ["keyboard"].toSet();
+  static set currentConfigs(Set<String> newConfigs) {
+    if (newConfigs != null) {
+      _currentConfigs = newConfigs;
+    }
+  }
+
+  static const String defaultColor = "ff000000";
   String name;
   bool isActive;
   Map<String, dynamic> configurations;
   DateTime _created;
   DateTime get created => _created;
   set created(DateTime value) {
-    if (value != null && !value.isAfter(DateTime.now())) {
+    var now = DateTime.now();
+    if (value != null && (value.isBefore(now) || value.isAtSameMomentAs(now))) {
       _created = value;
     }
   }
-/////////////////////////////////////////////////////////////////////////////////////////
 
   Profile() : this.init("", new Map(), false, DateTime.now());
   Profile.init(this.name, this.configurations, this.isActive, this._created) {
-    if (!this.configurations.containsKey("keyboard")) {
-      configurations["keyboard"] = Colors.black.value.toRadixString(16);
-    }
+    this.applyLatestConfigs();
   }
   Profile.copy(Profile copy)
       : this.init(copy.name, copy.configurations, copy.isActive, copy._created);
@@ -32,13 +38,31 @@ class Profile {
       {'name': name, 'configurations': configurations, 'isActive': isActive};
 
   Color getColor() {
-    if (configurations.values.length > 0)
-      return createColorMap(configurations.values.first);
-    else
+    if (configurations.values.length > 0) {
+      var map = Map<dynamic, int>();
+      configurations.forEach((c, value) {
+        if (map.containsKey(value)) {
+          map[value]++;
+        } else {
+          map[value] = 1;
+        }
+      });
+      var values = map.keys.toList();
+      values.sort((first, second) => map[first].compareTo(map[second]) * -1);
+      return createColorMap(values.first);
+    } else
       return Colors.black;
   }
 
   Color createColorMap(String first) {
     return Color(int.tryParse(first, radix: 16));
+  }
+
+  void applyLatestConfigs() {
+    Profile._currentConfigs.forEach((c) {
+      if (!this.configurations.containsKey(c)) {
+        this.configurations[c] = defaultColor;
+      }
+    });
   }
 }

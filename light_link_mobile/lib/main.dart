@@ -7,6 +7,8 @@ void main() {
   var service = RandomUserService.withSeededCache();
   var user = "gxldcptrick";
   service.getUserById(user);
+  service.linkComputerToUser(user, "Mc Bitchin");
+  service.updateProfileConfigsWithComputer(user);
   runApp(MyApp(
     service,
     user,
