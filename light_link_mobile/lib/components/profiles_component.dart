@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:light_link_mobile/data_layer/models/profile.dart';
@@ -146,6 +147,7 @@ class ProfilesState extends State<ProfilesComponent> {
             .then((c) => this._updateState());
       },
       (oldName, p) {
+        setState(() {});
         _service
             .updateProfileForUser(
               this._username,
@@ -154,14 +156,7 @@ class ProfilesState extends State<ProfilesComponent> {
             )
             .then((c) => this._updateState());
       },
-      (p) {
-        _service
-            .updateActiveProfile(
-              this._username,
-              p,
-            )
-            .then((c) => this._updateState());
-      },
+      _activateProfile,
     );
   }
 
@@ -176,6 +171,9 @@ class ProfilesState extends State<ProfilesComponent> {
   }
 
   void _removeProfile(Profile profileData, BuildContext context) {
+    setState(() {
+      _profiles.remove(profileData);
+    });
     this
         ._service
         .removeProfileFromUser(
@@ -189,6 +187,9 @@ class ProfilesState extends State<ProfilesComponent> {
         action: SnackBarAction(
           label: "Undo",
           onPressed: () {
+            setState(() {
+              _profiles.add(profileData);
+            });
             this
                 ._service
                 .addProfileToUser(
@@ -205,6 +206,12 @@ class ProfilesState extends State<ProfilesComponent> {
   }
 
   void _activateProfile(Profile profileData) {
+    setState(() {
+      _profiles.add(_activeProfile);
+      _activeProfile = profileData;
+      _profiles = _profiles.where((p) => p != profileData);
+    });
+
     this._service.updateActiveProfile(_username, profileData).then((c) {
       _updateState();
     });
