@@ -65,6 +65,11 @@ class RandomUserService extends UserService {
           "keyboard": color,
         },
         false,
+        DateTime.now().subtract(
+          Duration(
+            days: rnJesus.nextInt(100),
+          ),
+        ),
       );
       yield profile;
     }

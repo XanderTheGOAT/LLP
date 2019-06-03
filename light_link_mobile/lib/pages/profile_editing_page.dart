@@ -9,7 +9,6 @@ import 'color_editing_page.dart';
 class ProfileEditingPage extends StatefulWidget {
   final Function(String, Profile) callback;
   final Profile profile;
-  String oldName;
   ProfileEditingPage(this.callback, [this.profile]);
   @override
   State<StatefulWidget> createState() {

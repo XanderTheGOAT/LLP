@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:light_link_mobile/data_layer/models/profile.dart';
 import 'package:light_link_mobile/data_layer/services/user_service.dart';
+import 'package:light_link_mobile/pages/profile_editing_page.dart';
 
 import 'profile_component.dart';
 import 'selected_profile_component.dart';
@@ -21,7 +23,7 @@ class ProfilesState extends State<ProfilesComponent> {
   Profile _activeProfile;
   String _username;
   ProfilesState(this._service, this._username) {
-    _updateState();
+    _fetchProfiles();
   }
 
   @override
@@ -34,30 +36,42 @@ class ProfilesState extends State<ProfilesComponent> {
             .where((c) => c != _activeProfile)
             .map((profile) => _createProfileDisplays(profile, context))
             .toList(),
-        _createAddButton()
+        _createAddButton(context)
       ],
     );
   }
 
   _updateState() {
     this.setState(() {
-      _activeProfile = _service.getActiveProfile(_username);
-      _profiles = _service
-          .getProfilesForUser(_username)
-          .where((p) => p != _activeProfile);
+      _fetchProfiles();
     });
   }
 
   _createDismissibleBackground() {
     return Container(
-      alignment: Alignment.centerRight,
+      alignment: Alignment.center,
       padding: EdgeInsets.only(right: 22),
-      color: Colors.red,
-      child: Icon(Icons.delete),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.red, Colors.yellow],
+          stops: [.1, 1],
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Icon(
+            Icons.delete,
+          ),
+          Icon(
+            Icons.star,
+          ),
+        ],
+      ),
     );
   }
 
-  _createAddButton() {
+  _createAddButton(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
         top: 9,
@@ -71,7 +85,17 @@ class ProfilesState extends State<ProfilesComponent> {
           color: Colors.white,
         ),
         color: Colors.blueGrey,
-        onPressed: () => Navigator.pushNamed(context, "addProfile"),
+        onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (ctx) => ProfileEditingPage(
+                      (oldname, profile) {
+                        this._service.addProfileToUser(_username, profile);
+                        this._updateState();
+                      },
+                    ),
+              ),
+            ),
         label: Text(
           "Add",
           style: TextStyle(color: Colors.white),
@@ -164,6 +188,7 @@ class ProfilesState extends State<ProfilesComponent> {
                   this._username,
                   profileData,
                 );
+            _updateState();
           },
         ),
       ),
@@ -173,5 +198,13 @@ class ProfilesState extends State<ProfilesComponent> {
   void _activateProfile(Profile profileData) {
     this._service.updateActiveProfile(_username, profileData);
     _updateState();
+  }
+
+  void _fetchProfiles() {
+    _activeProfile = _service.getActiveProfile(_username);
+    _profiles = _service
+        .getProfilesForUser(_username)
+        .where((p) => p != _activeProfile)
+        .toList();
   }
 }
