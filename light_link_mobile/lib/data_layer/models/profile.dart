@@ -34,8 +34,12 @@ class Profile {
         isActive = json["isActive"] as bool,
         _created = json["created"] as DateTime;
 
-  Map<String, dynamic> toJson() =>
-      {'name': name, 'configurations': configurations, 'isActive': isActive};
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'configurations': configurations,
+        'isActive': isActive,
+        'created': _created,
+      };
 
   Color getColor() {
     if (configurations.values.length > 0) {

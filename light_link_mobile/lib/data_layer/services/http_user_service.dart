@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:light_link_mobile/data_layer/models/profile.dart';
 import 'package:light_link_mobile/data_layer/models/user.dart';
 import 'package:light_link_mobile/data_layer/services/user_service.dart';
@@ -52,16 +55,22 @@ class HttpUserService extends UserService {
   }
 
   @override
-  Future<void> removeProfileFromUser(String username, String profilename) {
-    return http.delete(this._profileUrl + username + "/" + profilename,
+  Future<void> removeProfileFromUser(
+      String username, String profilename) async {
+    var response = await http.delete(
+        this._profileUrl + username + "/" + profilename,
         headers: createAuthHeaders());
+    if (response.statusCode != 200) {
+      throw HttpException("Server Responded : " +
+          response.statusCode.toString() +
+          "but expected: 200");
+    }
   }
 
   @override
   Future<void> updateActiveProfile(String username, Profile profile) {
-    //TODO: Cant just pass profile as a body must turn into json first
     return http.put(this._profileUrl + "activate/" + username,
-        headers: createAuthHeaders(), body: profile);
+        headers: createAuthHeaders(), body: json.encode(profile.toJson()));
   }
 
   @override
