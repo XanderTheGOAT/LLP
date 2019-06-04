@@ -58,7 +58,6 @@ class RandomUserService extends UserService {
 
   Iterable<Profile> createProfiles() sync* {
     while (true) {
-      var color = generateColor();
       var profile = Profile.init(
         profileNames[rnJesus.nextInt(profileNames.length)],
         Map<String, dynamic>(),
