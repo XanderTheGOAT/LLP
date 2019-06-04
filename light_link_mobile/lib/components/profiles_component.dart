@@ -220,8 +220,13 @@ class ProfilesState extends State<ProfilesComponent> {
   void _fetchProfiles() {
     _service.getProfilesForUser(_username).then((c) => this.setState(() {
           _profiles = c.toList();
-          _activeProfile = _profiles.firstWhere((p) => p.isActive);
-          _profiles.sort((p1, p2) => p1.created.compareTo(p2.created));
+          if (_profiles.length > 0) {
+            _activeProfile = _profiles.firstWhere((p) => p.isActive);
+            _profiles.sort((p1, p2) => p1.created.compareTo(p2.created));
+          } else {
+            _activeProfile = Profile.init("No Profiles Yet Add One",
+                Map<String, dynamic>(), false, DateTime.now());
+          }
         }));
   }
 }
