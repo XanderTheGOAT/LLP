@@ -7,6 +7,7 @@ class HttpUserService extends UserService {
   String _rootUrl;
   String get _profileUrl => _rootUrl + "profile/";
   String get _userUrl => _rootUrl + "user/";
+  String get _computerUrl => _rootUrl + "computer/";
   String _token;
 
   HttpUserService(String host) {
@@ -15,61 +16,64 @@ class HttpUserService extends UserService {
 
   @override
   Future<void> addProfileToUser(String username, Profile profile) {
+    //TODO: Profile must be replaced with json represenation of profile
+    http.post(this._profileUrl + username,
+        headers: createAuthHeaders(), body: profile);
     return null;
   }
 
   @override
   Future<Profile> getActiveProfile(String username) {
-    var response = http.get(Uri.encodeFull(_profileUrl + "active/" + username),
+    //TODO: Implement getActiveProfile
+    var response = http.get(_profileUrl + "active/" + username,
         headers: createAuthHeaders());
     return null;
   }
 
   @override
   Future<Iterable<Profile>> getProfilesForUser(String username) {
-    var response = http.get(Uri.encodeFull(_profileUrl + "active/" + username),
+    //TODO: Implement getProfilesForUser
+    var response = http.get(_profileUrl + "active/" + username,
         headers: createAuthHeaders());
     return null;
   }
 
   @override
   Future<User> getUserById(String username) {
-    var response = http.get(Uri.encodeFull(_userUrl + "active/" + username),
-        headers: createAuthHeaders());
+    //TODO: Implement getUserById
+    var response =
+        http.get(_userUrl + "active/" + username, headers: createAuthHeaders());
     return null;
   }
 
   @override
   Future<void> linkComputerToUser(String username, String computerName) {
     // TODO: implement linkComputerToUser
-    return null;
   }
 
   @override
   Future<void> removeProfileFromUser(String username, String profilename) {
-    // TODO: implement removeProfileFromUser
-    return null;
+    return http.delete(this._profileUrl + username + "/" + profilename,
+        headers: createAuthHeaders());
   }
 
   @override
   Future<void> updateActiveProfile(String username, Profile profile) {
-    // TODO: implement updateActiveProfile
-    return null;
+    //TODO: Cant just pass profile as a body must turn into json first
+    return http.put(this._profileUrl + "activate/" + username,
+        headers: createAuthHeaders(), body: profile);
   }
 
   @override
   Future<void> updateProfileConfigsWithComputer(String username) {
-    // TODO: implement updateProfileConfigsWithComputer
-    return null;
+    //TODO: Implement updateProfileConfigsWithComputers
+    return http.put(this._profileUrl + username, headers: createAuthHeaders());
   }
 
   @override
   Future<void> updateProfileForUser(
       String uname, String ogName, Profile profile) {
-    return put(
-      this._profileUrl + uname,
-      headers: createAuthHeaders(),
-    );
+    return http.put(this._profileUrl + uname, headers: createAuthHeaders());
   }
 
   createAuthHeaders() {
