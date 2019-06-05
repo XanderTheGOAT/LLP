@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:light_link_mobile/data_layer/models/computer.dart';
 import 'package:light_link_mobile/data_layer/models/profile.dart';
 import 'package:light_link_mobile/data_layer/models/user.dart';
@@ -101,7 +102,6 @@ class RandomUserService extends UserService {
         profiles.first.isActive = true;
         cache[username] = User.init(username, "password", profiles);
       }
-
       return cache[username];
     });
   }
@@ -149,5 +149,12 @@ class RandomUserService extends UserService {
   Future<void> updateProfileForUser(
       String uname, String ogName, Profile profile) {
     return Future(() {});
+  }
+
+  @override
+  Future<void> authenticate(String username, String password) {
+    return Future(() {
+      debugPrint("Authenticated With: " + username + ", " + password);
+    });
   }
 }

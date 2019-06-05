@@ -14,4 +14,5 @@ abstract class UserService {
   Future<void> updateActiveProfile(String username, Profile profile);
   Future<void> updateProfileConfigsWithComputer(String username);
   Future<void> linkComputerToUser(String username, String computerName);
+  Future<void> authenticate(String username, String password);
 }

@@ -5,13 +5,17 @@ import 'data_layer/services/user_service.dart';
 
 void main() {
   var service = RandomUserService.withSeededCache();
-  var user = "gxldcptrick";
-  service.getUserById(user);
-  service.linkComputerToUser(user, "Mc Bitchin");
-  service.updateProfileConfigsWithComputer(user);
+  var username = "gxldcptrick";
+  var password = "Not A Secure Password";
+  service
+      .authenticate(username, password)
+      .then((v) => service.getUserById(username))
+      .then((u) => service.linkComputerToUser(username, "Mc Bitchin"))
+      .then((v) => service.updateProfileConfigsWithComputer(username))
+      .catchError((e) => debugPrint(e));
   runApp(MyApp(
     service,
-    user,
+    username,
   ));
 }
 
