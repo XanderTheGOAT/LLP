@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -34,19 +35,28 @@ class HttpUserService extends UserService {
   }
 
   @override
-  Future<Iterable<Profile>> getProfilesForUser(String username) {
+  Future<Iterable<Profile>> getProfilesForUser(String username) async {
     //TODO: Implement getProfilesForUser
-    var response = http.get(_profileUrl + "active/" + username,
+    var response = await http.get(_profileUrl + "active/" + username,
         headers: createAuthHeaders());
-    return null;
+
+    var completer = new Completer<Iterable<Profile>>();
+    var iterable = new List<Profile>.from(json.decode(response.body));
+    completer.complete(iterable);
+
+    return completer.future;
   }
 
   @override
-  Future<User> getUserById(String username) {
+  Future<User> getUserById(String username) async {
     //TODO: Implement getUserById
-    var response = http.get(_profileUrl + "active/" + username,
+    var response = await http.get(_profileUrl + "active/" + username,
         headers: createAuthHeaders());
-    return null;
+    var completer = new Completer<User>();
+    var user = User.fromJSON(json.decode(response.body));
+    completer.complete(user);
+
+    return completer.future;
   }
 
   @override
