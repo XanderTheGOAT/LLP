@@ -6,7 +6,8 @@ import 'package:light_link_mobile/data_layer/services/user_service.dart';
 class MainPage extends StatelessWidget {
   final String username;
   final UserService service;
-  MainPage(this.service, this.username);
+  final String password;
+  MainPage(this.service, this.username, this.password);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,11 @@ class MainPage extends StatelessWidget {
       appBar: AppBar(
         title: _createTitle(),
       ),
-      body: ProfilesComponent(this.service, this.username),
+      body: ProfilesComponent(
+        this.service,
+        this.username,
+        this.password,
+      ),
     );
   }
 

@@ -32,13 +32,13 @@ class Profile {
       : name = json["name"] as String,
         configurations = json["configurations"] as Map<String, dynamic>,
         isActive = json["isActive"] as bool,
-        _created = json["created"] as DateTime;
+        _created = DateTime.parse(json["created"]);
 
   Map<String, dynamic> toJson() => {
         'name': name,
         'configurations': configurations,
         'isActive': isActive,
-        'created': _created,
+        'created': _created.toIso8601String(),
       };
 
   Color getColor() {

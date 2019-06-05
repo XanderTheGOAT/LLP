@@ -10,10 +10,15 @@ import 'selected_profile_component.dart';
 class ProfilesComponent extends StatefulWidget {
   final UserService service;
   final String username;
-  ProfilesComponent(this.service, this.username);
+  final String password;
+  ProfilesComponent(this.service, this.username, this.password);
   @override
   State<StatefulWidget> createState() {
-    return ProfilesState(this.service, this.username);
+    return ProfilesState(
+      this.service,
+      this.username,
+      this.password,
+    );
   }
 }
 
@@ -22,8 +27,16 @@ class ProfilesState extends State<ProfilesComponent> {
   List<Profile> _profiles;
   Profile _activeProfile;
   String _username;
-  ProfilesState(this._service, this._username) {
-    _fetchProfiles();
+  final String _password;
+  ProfilesState(this._service, this._username, this._password) {
+    _service
+        .authenticate(_username, _password)
+        .then((c) => debugPrint("Logged In"))
+        .then((c) => _fetchProfiles())
+        .catchError((e) => setState(() {
+              debugPrint(e.toString());
+              _activeProfile.name = "Failed To Fetch";
+            }));
     _profiles = [];
     _activeProfile = Profile.init(
         "Loading...", Map<String, dynamic>(), true, DateTime.now());
