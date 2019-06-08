@@ -32,6 +32,8 @@ class ProfilesState extends State<ProfilesComponent> {
     _service
         .authenticate(_username, _password)
         .then((c) => debugPrint("Logged In"))
+        .then((c) =>
+            _service.linkComputerToUser(_username, "THE-GOATS-PC:CE2F71C8E687"))
         .then((c) => _fetchProfiles())
         .catchError((e) => setState(() {
               debugPrint(e.toString());
@@ -45,7 +47,7 @@ class ProfilesState extends State<ProfilesComponent> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: [
+      children: <Widget>[
         _createSelectedDisplay(),
         ...this
             ._profiles
@@ -104,8 +106,10 @@ class ProfilesState extends State<ProfilesComponent> {
               MaterialPageRoute(
                 builder: (ctx) => ProfileEditingPage(
                       (oldname, profile) {
-                        this._service.addProfileToUser(_username, profile);
-                        this._updateState();
+                        this
+                            ._service
+                            .addProfileToUser(_username, profile)
+                            .then((v) => _updateState());
                       },
                     ),
               ),

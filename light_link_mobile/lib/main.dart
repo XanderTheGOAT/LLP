@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:light_link_mobile/data_layer/services/http_user_service.dart';
 import 'package:light_link_mobile/data_layer/services/random_user_service.dart';
 import './pages/main_page.dart';
+import 'package:http/http.dart' as http;
 import 'data_layer/services/user_service.dart';
 
 var username = "gxldcptrick";

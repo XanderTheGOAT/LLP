@@ -7,7 +7,7 @@ class Computer {
   Computer.fromJSON(Map<String, dynamic> json)
       : name = json["name"],
         userName = json["userName"],
-        connectedDevices = json["connectedDevices"];
+        connectedDevices = List.castFrom(json["connectedDevices"]);
   Map<String, dynamic> toJson() => {
         'name': name,
         'userName': userName,

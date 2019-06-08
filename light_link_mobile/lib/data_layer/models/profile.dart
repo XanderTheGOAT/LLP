@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 class Profile {
-  static Set<String> _currentConfigs = ["keyboard"].toSet();
+  static Set<String> _currentConfigs = [
+    "keyboard",
+    "mouse",
+    "mousepad",
+  ].toSet();
   static set currentConfigs(Set<String> newConfigs) {
     if (newConfigs != null) {
       _currentConfigs = newConfigs;

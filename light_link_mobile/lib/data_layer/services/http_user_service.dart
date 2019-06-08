@@ -64,9 +64,9 @@ class HttpUserService extends UserService {
       headers: createAuthHeaders(),
     );
     if (response.statusCode != 200) {
-      throw HttpException("Server Responded: " +
+      return Future.error(HttpException("Server Responded: " +
           response.statusCode.toString() +
-          " but expected: 200");
+          " but expected: 200"));
     }
 
     var iterable = List.from(
@@ -92,27 +92,31 @@ class HttpUserService extends UserService {
 
   @override
   Future<void> linkComputerToUser(String username, String computerName) async {
-    var response = await http.get(_computerUrl + computerName);
+    var response = await http.get(
+      _computerUrl,
+      headers: createAuthHeaders(),
+    );
     if (response.statusCode != 200) {
-      throw HttpException("Server Responded : " +
+      return Future.error(HttpException("Server Responded : " +
           response.statusCode.toString() +
-          "but expected: 200");
+          "but expected: 200"));
     }
-    var computerJson = json.decode(response.body);
-    var computer = Computer.fromJSON(computerJson);
+    var computer = List.of(json.decode(response.body))
+        .map((c) => Computer.fromJSON(c))
+        .singleWhere((c) => c.name == computerName);
     computer.userName = username;
     var headers = createAuthHeaders();
     headers["content-type"] = "application/json";
-    var secondResponse = await http.post(
-      _computerUrl,
+    var secondResponse = await http.put(
+      _computerUrl + computerName,
       headers: headers,
-      body: computer.toJson(),
+      body: json.encode(computer.toJson()),
     );
     if (secondResponse.statusCode != 200) {
       return Future.error(HttpException(
-        "Server Responded : " +
+        "Server Responded :" +
             secondResponse.statusCode.toString() +
-            "but expected: 200",
+            " but expected: 200",
       ));
     }
   }
@@ -126,7 +130,7 @@ class HttpUserService extends UserService {
     if (response.statusCode != 200) {
       throw HttpException("Server Responded : " +
           response.statusCode.toString() +
-          "but expected: 200");
+          " but expected: 200");
     }
   }
 
@@ -134,15 +138,15 @@ class HttpUserService extends UserService {
   Future<void> updateActiveProfile(String username, Profile profile) async {
     var headers = createAuthHeaders();
     headers["content-type"] = "application/json";
-    var response = await http.put(
+    var response = await http.post(
       this._profileUrl + "activate/" + username,
       headers: headers,
       body: json.encode(profile.toJson()),
     );
     if (response.statusCode != 200) {
-      throw HttpException("Server Responded : " +
+      return Future.error(HttpException("Server Responded: " +
           response.statusCode.toString() +
-          "but expected: 200");
+          " but expected: 200"));
     }
   }
 
