@@ -42,7 +42,7 @@ class ProfileEditingPageState extends State<ProfileEditingPage> {
                 padding: EdgeInsets.all(5),
                 child: TextField(
                   onSubmitted: (c) {
-                    profile.name = c;
+                    this.profile.name = c;
                   },
                   controller: _controller,
                   decoration: InputDecoration(
@@ -78,22 +78,22 @@ class ProfileEditingPageState extends State<ProfileEditingPage> {
         .keys
         .map(
           (k) => FlatButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (ctx) => ColorEditingPage(
-                              profile,
-                              k,
-                              this.profile.configurations[k],
-                            )),
-                  );
-                },
-                child: ColorComponent(
-                  this.profile.configurations[k],
-                  k,
-                ),
-              ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (ctx) => ColorEditingPage(
+                          profile,
+                          k,
+                          this.profile.configurations[k],
+                        )),
+              );
+            },
+            child: ColorComponent(
+              this.profile.configurations[k],
+              k,
+            ),
+          ),
         )
         .toList();
   }

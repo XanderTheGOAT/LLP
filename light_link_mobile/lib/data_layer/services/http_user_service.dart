@@ -31,6 +31,7 @@ class HttpUserService extends UserService {
         profile.toJson(),
       ),
     );
+    print("Name: " + profile.name);
     if (response.statusCode != 200) {
       return Future.error(
         HttpException(
@@ -54,6 +55,7 @@ class HttpUserService extends UserService {
           "but expected: 200");
     }
     var bodyJson = json.decode(response.body);
+    print(bodyJson);
     return Profile.fromJSON(bodyJson);
   }
 
@@ -68,10 +70,12 @@ class HttpUserService extends UserService {
           response.statusCode.toString() +
           " but expected: 200"));
     }
-
     var iterable = List.from(
       json.decode(response.body),
     ).map((c) => Profile.fromJSON(c));
+    iterable.forEach((f) => () {
+          print(f);
+        });
     return iterable;
   }
 
@@ -112,6 +116,7 @@ class HttpUserService extends UserService {
       headers: headers,
       body: json.encode(computer.toJson()),
     );
+    print("Link to computer");
     if (secondResponse.statusCode != 200) {
       return Future.error(HttpException(
         "Server Responded :" +
@@ -174,6 +179,7 @@ class HttpUserService extends UserService {
   @override
   Future<void> updateProfileForUser(
       String uname, String ogName, Profile profile) async {
+    print(profile.toJson());
     var headers = createAuthHeaders();
     headers["content-type"] = "application/json";
     var response = await http.put(

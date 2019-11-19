@@ -12,7 +12,7 @@ class Profile {
     }
   }
 
-  static const String defaultColor = "ff000000";
+  static const String defaultColor = "ff00ffff";
   String name;
   bool isActive;
   Map<String, dynamic> configurations;
@@ -45,6 +45,14 @@ class Profile {
         'created': _created.toIso8601String(),
       };
 
+  Map<String, dynamic> getHexValuesWithoutAlpha() {
+    var map = Map<String, dynamic>();
+    var iterator = configurations.entries;
+    iterator.forEach(
+        (entry) => map[entry.key] = entry.value.toString().substring(2));
+    return map;
+  }
+
   Color getColor() {
     if (configurations.values.length > 0) {
       var map = Map<dynamic, int>();
@@ -57,6 +65,9 @@ class Profile {
       });
       var values = map.keys.toList();
       values.sort((first, second) => map[first].compareTo(map[second]) * -1);
+      values.forEach((f) => () {
+            print(f.toString());
+          });
       return createColorMap(values.first);
     } else
       return Colors.black;
