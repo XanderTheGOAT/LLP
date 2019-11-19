@@ -233,16 +233,13 @@ class ProfilesState extends State<ProfilesComponent> {
     });
 
     this._service.updateActiveProfile(_username, profileData).then((c) {
-      _activeProfile.isActive = true;
       _updateState();
     });
   }
 
   void _fetchProfiles() {
-    print("fetch");
     _service.getProfilesForUser(_username).then((c) => this.setState(() {
           _profiles = c.toList();
-          _profiles.forEach((f) => print(f.toString()));
           if (_profiles.length > 0) {
             _activeProfile = _profiles.firstWhere((p) => p.isActive);
             _profiles.sort((p1, p2) => p1.created.compareTo(p2.created));

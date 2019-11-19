@@ -65,9 +65,6 @@ class Profile {
       });
       var values = map.keys.toList();
       values.sort((first, second) => map[first].compareTo(map[second]) * -1);
-      values.forEach((f) => () {
-            print(f.toString());
-          });
       return createColorMap(values.first);
     } else
       return Colors.black;

@@ -68,14 +68,14 @@ class ProfileComponent extends StatelessWidget {
         ),
         color: Colors.blueGrey,
         onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (ctx) => ProfileEditingPage(
-                      _onProfileChanged,
-                      this.profile,
-                    ),
-              ),
+          context,
+          MaterialPageRoute(
+            builder: (ctx) => ProfileEditingPage(
+              _onProfileChanged,
+              this.profile,
             ),
+          ),
+        ),
       ),
     );
   }
